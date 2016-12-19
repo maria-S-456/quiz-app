@@ -17,6 +17,7 @@
 }
 .center {
 	text-align: center;
+	margin: 0 auto;
 }
 .hidden {
 	display: none; /* visibility: hidden will take space. display: none will not.; */
@@ -39,4 +40,5 @@ h1 {
 	height: 50px;
 	margin-top: 50px;
 	font-size: 30px;
+	
 }
