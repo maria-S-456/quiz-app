@@ -1,5 +1,18 @@
 var x = 0;
-function createQuestions(){
+var correct_score = 0;
+var incorrect_score = 0;
+var user_answers = 
+[
+	false,
+	false, 
+	false,
+	false,
+	false
+];
+var howManyCorrect = 0;
+
+function createQuestions()
+{
 
 return {"questionSets":
 			[
@@ -37,30 +50,125 @@ return {"questionSets":
 					"secondOption": "It crosses Neptune's orbit",
 					"thirdOption": "It crosses Uranus's orbit",
 					"fourthOption": "It is perfectly circular."
+				},
+				{
+					"question": "Results"
 				}
-			]};
-		}
+		]};
+}
+
+
+
 
 function display(quiz)
 {
-	$("p").text(quiz.questionSets[x].question);
+	$("#question_num").text((x+1) + "/5");															//*******
+	$("#score_keeper").text(correct_score + " correct  " + incorrect_score + " incorrect");			//*******
+	$("#question").text(quiz.questionSets[x].question);
 	$("#first").text(quiz.questionSets[x].firstOption);
 	$("#second").text(quiz.questionSets[x].secondOption);
 	$("#third").text(quiz.questionSets[x].thirdOption);
 	$("#fourth").text(quiz.questionSets[x].fourthOption);
+	
 }
-function secondClick(){
-	$("p").text("Results: 10/10");
-	$("#submitBtn").remove();
+function answerkey(select, quiz)
+{ var keyArray = 
+	[
+		quiz.questionSets[0].thirdOption,
+		quiz.questionSets[1].fourthOption,
+		quiz.questionSets[2].firstOption,
+		quiz.questionSets[3].thirdOption,
+		quiz.questionSets[4].secondOption
+	]
+	return keyArray[select];
 }
-/*
-var testQuestions = {["which dwarf planet has the furthest orbit?"], ["Why does Haumea have a football-like appearance?"],["What is NOT a criteria to be called a planet?"],["What is the closest dwarf planet?"],["What makes Pluto's orbit different from the rest of the planets?"]};
-var firstOption = {["Pluto"],["It is heavily bombarded by asteroids, which have altered it's appearance."],["It must have an atmosphere."],["Pluto"],["It wobbles."]};
-var secondOption = {["Makemake"],["It's moons' strong gravity has caused it to stretch."],["It orbits the sun."],["Eris"],["It crosses Neptune's orbit."]};
-var thirdOption = {["Sedna"],["It's gravity is not strong enough to keep it in a spherical shape."],["It is round in shape."],["Ceres"],["It crosses Uranus's orbit"]};
-var fourthOption = {["Haumea"],["It's rotation is extremely fast, giving it an elongated shape."],["There are no foreign objects in it's orbit."],["Makemake"],["It is perfectly circular."]};
-*/
+function checkAnswer()
+{
+	var y = x-1;
+	if(x == 1) // if we are on the first question
+	{
+		if($("input[value='three']:checked").val()) //if the correct answer is selected
+		{
+			user_answers[0] = true;
+			howManyCorrect++;
+			correct_score++;
+		}
+		else
+		{
+			alert("Correct answer: " + answerkey(y, createQuestions()));
+			incorrect_score++;
+		}
+	}
+	if(x == 2) // if we are on the second question
+	{
+		if($("input[value='four']:checked").val()) //if the correct answer is selected
+		{
+			user_answers[1] = true;
+			howManyCorrect++;
+			correct_score++;
+		}
+		else
+		{
+			alert("Correct answer: " + answerkey(y, createQuestions()));
+			incorrect_score++;
+		}
+	}
+	if(x == 3) // if we are on the third question
+	{
+		if($("input[value='one']:checked").val()) //if the correct answer is selected
+		{
+			user_answers[2] = true;
+			howManyCorrect++;
+			correct_score++;
+		}
+		else
+		{
+			alert("Correct answer: " + answerkey(y, createQuestions()));
+			incorrect_score++;
+		}
+	}
+	if(x == 4) // if we are on the fourth question
+	{
+		if($("input[value='three']:checked").val()) //if the correct answer is selected
+		{
+			user_answers[3] = true;
+			howManyCorrect++;
+			correct_score++;
+		}
+		else
+		{
+			alert("Correct answer: " + answerkey(y, createQuestions()));
+			incorrect_score++;
+		}
+	}
+	if(x == 5) // if we are on the fifth question
+	{
+		if($("input[value='two']:checked").val()) //if the correct answer is selected
+		{
+			user_answers[4] = true;
+			howManyCorrect++;
+			correct_score++;
+		}
+		else
+		{
+			alert("Correct answer: " + answerkey(y, createQuestions()));
+			incorrect_score++;
+		}
+	}
+
+}
+function reset()
+{
+
+	x = 0;
+	correct_score = 0;
+	incorrect_score = 0;
+	howManyCorrect = 0;
+	alert(x + " " + correct_score + " " + incorrect_score);
+}
+
 $(document).ready(function() {
+	$("#tryAgain").hide();
 	$('#submitBtn').click(function()
 	{
 		var planetQuiz = createQuestions();
@@ -68,16 +176,40 @@ $(document).ready(function() {
 		$("fieldset").removeClass("center");
 		$("fieldset").removeClass("hidden");
 		$("#options-div").removeClass("hidden");
+		$("#submitBtn").prop('value', 'Continue');
+		checkAnswer();
 		display(planetQuiz);
+
 		x++;
-		if(x == 5){
-			$("submitBtn").off('click', secondClick);
+
+		if(x === 6)
+		{
+			$("#question_num").hide();
+			$("#score_keeper").hide();
+			$("fieldset").hide();
+			$("#results-page").removeClass("hidden");
+			$("#submitBtn").hide();
+			$("#tryAgain").show();
+			$("#results-page").text("You got " + howManyCorrect + "/5 correct!");
+			$("#question-div").css("height", "30px");
+			$("#question-div").css("text-align","center");
+			$("#buttonDiv").css('margin-top', '-80px');
+			$(".inner-panel").css("height", "230px");	
+			$('#tryAgain').click(function(){
+				reset();
+				$("#question-div").css("height", "90px");
+				$("#question-div").css("text-align","left");
+				$(".inner-panel").css("height", "380px");
+				$("#question_num").show();
+				$("#score_keeper").show();
+				$("fieldset").show();
+				$("#tryAgain").hide();
+				$("#results-page").addClass("hidden");
+				$('#submitBtn').show();
+
+				display(planetQuiz);
+			});	
 		}
 		
-//		$("#first").text(firstOption[x]);
-//		$("#second").text(secondOption[x]);
-//		$("#third").text(thirdOption[x]);
-//		$("#fourth").text(fourthOption[x]);
-	});
-
+	});	
 });
